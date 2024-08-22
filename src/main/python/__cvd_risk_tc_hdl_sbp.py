@@ -46,6 +46,9 @@ S_WOMEN = 0.95012
 CONST_MEN = 23.9802
 CONST_WOMEN = 26.1931
 
+CONST_MEN_BALANCER = 0.10
+CONST_WOMEN_BALANCER = 0.12
+
 def _calc_frs(X, b, surv, const):
     return 1 - surv** np.exp(X.dot(b) - const)
 
@@ -74,9 +77,9 @@ def heart_age_by_cvd_tc_hdl_sbp(cvd_risk,age,sex):
         return 0
     if (sex == 'Male'):
         if (age < 60):
-            X = BETA_MEN_NON_HT[1]*np.log(180) + (BETA_MEN_NON_HT[2]*np.log(45)) + BETA_MEN_NON_HT[3]*np.log(125) -CONST_MEN
+            X = BETA_MEN_NON_HT[1]*np.log(180) + (BETA_MEN_NON_HT[2]*np.log(45)) + BETA_MEN_NON_HT[3]*np.log(125) -CONST_MEN + CONST_MEN_BALANCER
         else:
-            X = BETA_MEN_NON_HT[1]*np.log(180) + (BETA_MEN_NON_HT[2]*np.log(45)) + BETA_MEN_NON_HT[3]*np.log(130) -CONST_MEN
+            X = BETA_MEN_NON_HT[1]*np.log(180) + (BETA_MEN_NON_HT[2]*np.log(45)) + BETA_MEN_NON_HT[3]*np.log(130) -CONST_MEN + CONST_MEN_BALANCER
         exp = np.exp(X)
         ln_cvd = np.log(1-cvd_risk)/np.log(S_MEN)
         result = np.exp(((np.log(ln_cvd/exp))*(1/BETA_MEN_NON_HT[0])))
@@ -84,9 +87,9 @@ def heart_age_by_cvd_tc_hdl_sbp(cvd_risk,age,sex):
 
     else:
         if (age < 60):
-            X = BETA_WOMEN_NON_HT[1]*np.log(180) + (BETA_WOMEN_NON_HT[2]*np.log(45)) + BETA_WOMEN_NON_HT[3]*np.log(125) -CONST_WOMEN
+            X = BETA_WOMEN_NON_HT[1]*np.log(180) + (BETA_WOMEN_NON_HT[2]*np.log(45)) + BETA_WOMEN_NON_HT[3]*np.log(125) -CONST_WOMEN + CONST_WOMEN_BALANCER
         else:
-            X = BETA_WOMEN_NON_HT[1]*np.log(180) + (BETA_WOMEN_NON_HT[2]*np.log(45)) + BETA_WOMEN_NON_HT[3]*np.log(130) -CONST_WOMEN
+            X = BETA_WOMEN_NON_HT[1]*np.log(180) + (BETA_WOMEN_NON_HT[2]*np.log(45)) + BETA_WOMEN_NON_HT[3]*np.log(130) -CONST_WOMEN + CONST_WOMEN_BALANCER
         exp = np.exp(X)
         ln_cvd = np.log(1-cvd_risk)/np.log(S_WOMEN)
         result = np.exp(((np.log(ln_cvd/exp))*(1/BETA_WOMEN_NON_HT[0])))

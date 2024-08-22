@@ -29,6 +29,9 @@ S_WOMEN = 0.94679
 CONST_MEN = 15.4710
 CONST_WOMEN = 15.1252
 
+CONST_MEN_BALANCER = 0.10
+CONST_WOMEN_BALANCER = 0.12
+
 def _calc_frs(X, b, surv, const):
     return 1 - surv** np.exp(X.dot(b) - const)
 
@@ -45,13 +48,13 @@ def frs_cvd(gender, time, age, cvd):
 #get heart age by age and sex
 def get_heart_age(age, sex):
     if (sex == 'Male'):
-        X = BETA_MEN[0]*np.log(age) - CONST_MEN
+        X = BETA_MEN[0]*np.log(age) - CONST_MEN + CONST_MEN_BALANCER
         exp = np.exp(X)
         ln_cvd = np.log(1-cvd)/np.log(S_MEN)
         result = np.exp(((np.log(ln_cvd/exp))*(1/BETA_MEN[1])))
         return np.round(result)
     else:
-        X = BETA_WOMEN[0]*np.log(age) - CONST_WOMEN
+        X = BETA_WOMEN[0]*np.log(age) - CONST_WOMEN + CONST_WOMEN_BALANCER
         exp = np.exp(X)
         ln_cvd = np.log(1-cvd)/np.log(S_WOMEN)
         result = np.exp(((np.log(ln_cvd/exp))*(1/BETA_WOMEN[1])))
@@ -65,13 +68,13 @@ def get_heart_age_by_gender_bmi(gender, age, bmi):
     bmi : bmi
     '''
     if (gender == 'Male'):
-        X = BETA_MEN[0]*np.log(age) + BETA_MEN[1]*np.log(bmi) - CONST_MEN
+        X = BETA_MEN[0]*np.log(age) + BETA_MEN[1]*np.log(bmi) - CONST_MEN + CONST_MEN_BALANCER
         exp = np.exp(X)
         ln_cvd = np.log(1-cvd)/np.log(S_MEN)
         result = np.exp(((np.log(ln_cvd/exp))*(1/BETA_MEN[2])))
         return np.round(result)
     else:
-        X = BETA_WOMEN[0]*np.log(age) + BETA_WOMEN[1]*np.log(bmi) - CONST_WOMEN
+        X = BETA_WOMEN[0]*np.log(age) + BETA_WOMEN[1]*np.log(bmi) - CONST_WOMEN + CONST_WOMEN_BALANCER
         exp = np.exp(X)
         ln_cvd = np.log(1-cvd)/np.log(S_WOMEN)
         result = np.exp(((np.log(ln_cvd/exp))*(1/BETA_WOMEN[2])))
@@ -91,13 +94,13 @@ def heart_age_by_cvd_bmi(cvd,age,sex):
     else:
         cvd = float(cvd)
     if (sex == 'Male'):
-        X = BETA_MEN[1]*np.log(22) - CONST_MEN
+        X = BETA_MEN[1]*np.log(22) - CONST_MEN + CONST_MEN_BALANCER
         exp = np.exp(X)
         ln_cvd = np.log(1-cvd)/np.log(S_MEN)
         result = np.exp(((np.log(ln_cvd/exp))*(1/BETA_MEN[0])))
         return np.round(result)
     else
-        X = BETA_WOMEN[1]*np.log(22) - CONST_WOMEN
+        X = BETA_WOMEN[1]*np.log(22) - CONST_WOMEN + CONST_WOMEN_BALANCER
         exp = np.exp(X)
         ln_cvd = np.log(1-cvd)/np.log(S_WOMEN)
         result = np.exp(((np.log(ln_cvd/exp))*(1/BETA_WOMEN[0])))
