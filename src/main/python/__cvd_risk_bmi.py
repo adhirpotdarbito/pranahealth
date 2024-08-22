@@ -7,7 +7,6 @@
     permission of AtmanCare India Private Limited.
    
 '''
-from __config import *
 import numpy as np
 
 BETA_MEN = np.array([3.25024, #log age
@@ -29,6 +28,11 @@ S_WOMEN = 0.94679
 CONST_MEN = 15.4710
 CONST_WOMEN = 15.1252
 
+CONST_MEN_BALANCER = 0.10
+CONST_WOMEN_BALANCER = 0.12
+
+cvd = 0
+
 def _calc_frs(X, b, surv, const):
     return 1 - surv** np.exp(X.dot(b) - const)
 
@@ -41,17 +45,18 @@ def frs_bmi(gender, time, age, bmi, htn, dia, smk):
 
 def frs_cvd(gender, time, age, cvd):
     if (gender == 'Male'):
+        pass
 
 #get heart age by age and sex
 def get_heart_age(age, sex):
     if (sex == 'Male'):
-        X = BETA_MEN[0]*np.log(age) - CONST_MEN
+        X = BETA_MEN[0]*np.log(age) - CONST_MEN + CONST_MEN_BALANCER
         exp = np.exp(X)
         ln_cvd = np.log(1-cvd)/np.log(S_MEN)
         result = np.exp(((np.log(ln_cvd/exp))*(1/BETA_MEN[1])))
         return np.round(result)
     else:
-        X = BETA_WOMEN[0]*np.log(age) - CONST_WOMEN
+        X = BETA_WOMEN[0]*np.log(age) - CONST_WOMEN + CONST_WOMEN_BALANCER
         exp = np.exp(X)
         ln_cvd = np.log(1-cvd)/np.log(S_WOMEN)
         result = np.exp(((np.log(ln_cvd/exp))*(1/BETA_WOMEN[1])))
@@ -65,13 +70,13 @@ def get_heart_age_by_gender_bmi(gender, age, bmi):
     bmi : bmi
     '''
     if (gender == 'Male'):
-        X = BETA_MEN[0]*np.log(age) + BETA_MEN[1]*np.log(bmi) - CONST_MEN
+        X = BETA_MEN[0]*np.log(age) + BETA_MEN[1]*np.log(bmi) - CONST_MEN + CONST_MEN_BALANCER
         exp = np.exp(X)
         ln_cvd = np.log(1-cvd)/np.log(S_MEN)
         result = np.exp(((np.log(ln_cvd/exp))*(1/BETA_MEN[2])))
         return np.round(result)
     else:
-        X = BETA_WOMEN[0]*np.log(age) + BETA_WOMEN[1]*np.log(bmi) - CONST_WOMEN
+        X = BETA_WOMEN[0]*np.log(age) + BETA_WOMEN[1]*np.log(bmi) - CONST_WOMEN + CONST_WOMEN_BALANCER
         exp = np.exp(X)
         ln_cvd = np.log(1-cvd)/np.log(S_WOMEN)
         result = np.exp(((np.log(ln_cvd/exp))*(1/BETA_WOMEN[2])))
@@ -86,22 +91,44 @@ def heart_age_by_cvd_bmi(cvd,age,sex):
     #handle the condition wheere cvd is None
     if cvd is None:
         return 0
-    if str(cvd) == n_a:
+    if str(cvd) == "":
         return 0
     else:
         cvd = float(cvd)
     if (sex == 'Male'):
-        X = BETA_MEN[1]*np.log(22) - CONST_MEN
+        X = BETA_MEN[1]*np.log(22) - CONST_MEN + CONST_MEN_BALANCER
         exp = np.exp(X)
         ln_cvd = np.log(1-cvd)/np.log(S_MEN)
         result = np.exp(((np.log(ln_cvd/exp))*(1/BETA_MEN[0])))
         return np.round(result)
-    else
-        X = BETA_WOMEN[1]*np.log(22) - CONST_WOMEN
+    else:
+        X = BETA_WOMEN[1]*np.log(22) - CONST_WOMEN + CONST_WOMEN_BALANCER
         exp = np.exp(X)
         ln_cvd = np.log(1-cvd)/np.log(S_WOMEN)
         result = np.exp(((np.log(ln_cvd/exp))*(1/BETA_WOMEN[0])))
         return np.round(result)
 
+def validate_heart_age(cvd,age,sex):
+    #handle the condition wheere cvd is None
+    if cvd is None:
+        return 0
+    if str(cvd) == "":
+        return 0
+    else:
+       split_gender = sex.split(",")
+       return 1
+
+def add_heart_age_adjuster(heart_age):
+    heart_age_adjuster : int = 1
+    
+    print("Using heart age adjuster..")
+
+    print("test...")
+    return heart_age + heart_age_adjuster
+
 #cvd = frs('Male',10,33,26.3,0,0,1)
-#print heart_age_by_cvd(cvd,32,'Male')
+print(heart_age_by_cvd_bmi(cvd,32,'Male'))
+heart_age = heart_age_by_cvd_bmi(cvd,32,'Female')
+hear_age_post_adjustment = add_heart_age_adjuster(heart_age)
+print("Adjusted the heart age...")
+
