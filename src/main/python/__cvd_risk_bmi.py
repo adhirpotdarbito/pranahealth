@@ -106,5 +106,15 @@ def heart_age_by_cvd_bmi(cvd,age,sex):
         result = np.exp(((np.log(ln_cvd/exp))*(1/BETA_WOMEN[0])))
         return np.round(result)
 
+def validate_heart_age(cvd,age,sex):
+    #handle the condition wheere cvd is None
+    if cvd is None:
+        return 0
+    if str(cvd) == n_a:
+        return 0
+    else:
+       split_gender = sex.split(",")
+       return 1
+
 #cvd = frs('Male',10,33,26.3,0,0,1)
 #print heart_age_by_cvd(cvd,32,'Male')
