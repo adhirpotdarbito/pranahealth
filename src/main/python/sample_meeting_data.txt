@@ -1,5 +1,0 @@
-{
-   "user_name":"",
-   "user_password":"",
-   "session_details":""
-}
