@@ -119,7 +119,10 @@ def validate_heart_age(cvd,age,sex):
 def add_heart_age_adjuster(heart_age):
     heart_age_adjuster : int = "1"
     
-    print("Using heart age adjuster..")
+  print("Using heart age adjuster..")
+
+
+     print("test...")
     return heart_age + heart_age_adjuster
 
 #cvd = frs('Male',10,33,26.3,0,0,1)
