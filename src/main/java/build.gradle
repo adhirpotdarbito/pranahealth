@@ -1,0 +1,19 @@
+plugins {
+       id 'java'
+   }
+
+   group 'com.isana.data'  // Change to your desired group ID
+   version '1.0-SNAPSHOT'  // Change to your desired version
+
+   repositories {
+       mavenCentral()  // Use Maven Central repository
+   }
+
+   dependencies {
+       // Add your dependencies here
+       // Example: implementation 'org.springframework:spring-core:5.3.9'
+   }
+
+   // Optionally, you can specify the Java version
+   sourceCompatibility = '1.8'  // Change to your desired Java version
+   targetCompatibility = '1.8'
