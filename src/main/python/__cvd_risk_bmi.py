@@ -116,5 +116,10 @@ def validate_heart_age(cvd,age,sex):
        split_gender = sex.split(",")
        return 1
 
+def add_heart_age_adjuster(heart_age):
+    heart_age_adjuster : int = "1"
+    
+    return heart_age + heart_age_adjuster
+
 #cvd = frs('Male',10,33,26.3,0,0,1)
 #print heart_age_by_cvd(cvd,32,'Male')
